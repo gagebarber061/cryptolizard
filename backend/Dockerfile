@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     cmake \
     git \
+    wget \
     libcurl4-openssl-dev \
     nlohmann-json3-dev \
     libboost-all-dev \
@@ -16,11 +17,9 @@ RUN apt-get update && apt-get install -y \
 # Create app directory
 WORKDIR /app
 
-# Download Crow header-only library
-RUN git clone https://github.com/CrowCpp/Crow.git /tmp/crow && \
-    mkdir -p /app/include && \
-    cp /tmp/crow/include/crow_all.h /app/include/crow.h && \
-    rm -rf /tmp/crow
+# Download Crow header-only library (use direct download instead of git clone)
+RUN mkdir -p /app/include && \
+    wget https://raw.githubusercontent.com/CrowCpp/Crow/master/include/crow_all.h -O /app/include/crow.h
 
 # Copy source files
 COPY crypto_server.cpp .
