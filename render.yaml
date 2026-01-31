@@ -14,7 +14,6 @@ services:
     env: static
     buildCommand: echo "Static site ready"
     staticPublishPath: ./frontend
-    plan: free
     routes:
       - type: rewrite
         source: /*
