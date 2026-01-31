@@ -18,6 +18,7 @@ const API_BASE_URL = (() => {
 console.log('🦎 API URL:', API_BASE_URL);
 
 const UPDATE_INTERVAL = 5 * 60 * 1000; // 5 minutes
+const COIN_INFO_URL = 'coin-info.json'; // Local JSON file with detailed coin info
 
 // State management
 let currentTab = 'market';
@@ -27,6 +28,7 @@ let allCoinsData = [];
 let trendingData = {};
 let globalData = {};
 let updateTimer = null;
+let coinInfoData = {}; // Store coin detailed info
 
 // ============================================================================
 // DATA FETCHING FUNCTIONS
@@ -105,6 +107,35 @@ async function checkServerHealth() {
         console.error('Server health check failed:', error);
         return { status: 'unavailable' };
     }
+}
+
+// Load detailed coin information from local JSON
+async function loadCoinInfo() {
+    try {
+        const response = await fetch(COIN_INFO_URL);
+        if (response.ok) {
+            coinInfoData = await response.json();
+            console.log('✅ Coin info data loaded');
+        }
+    } catch (error) {
+        console.warn('⚠️  Could not load coin info data:', error);
+        coinInfoData = {};
+    }
+}
+
+// Get risk level styling
+function getRiskLevelStyle(riskLevel) {
+    const level = (riskLevel || '').toLowerCase().replace(/\s+/g, '-');
+    
+    const styles = {
+        'low': { color: '#10b981', bg: '#d1fae5', label: 'Low' },
+        'medium': { color: '#f59e0b', bg: '#fef3c7', label: 'Medium' },
+        'medium-high': { color: '#f97316', bg: '#ffedd5', label: 'Medium-High' },
+        'high': { color: '#ef4444', bg: '#fee2e2', label: 'High' },
+        'very-high': { color: '#dc2626', bg: '#fecaca', label: 'Very High' }
+    };
+    
+    return styles[level] || styles['medium'];
 }
 
 // ============================================================================
@@ -473,11 +504,67 @@ async function showDetailPage(coinId) {
         document.getElementById('stat-ath').textContent = `$${formatNumber(coin.ath)}`;
         document.getElementById('stat-ath').title = `${athDate}${athPercent}`;
         
-        // Info section - hide for now since backend doesn't have this data
-        // We can add this later with additional API calls if needed
+        // Info section - populate from coinInfoData
+        const info = coinInfoData[coin.id];
         const infoSection = document.querySelector('.info-section');
+        
         if (infoSection) {
-            infoSection.style.display = 'none';
+            if (info) {
+                // Show and populate info section
+                infoSection.style.display = 'block';
+                
+                // Update coin name in heading
+                document.getElementById('info-coin-name').textContent = coin.name;
+                
+                // Creation info
+                document.getElementById('info-creator').textContent = info.founder || 'Unknown';
+                document.getElementById('info-date').textContent = info.dateFound || 'Unknown';
+                
+                // Description
+                document.getElementById('info-description').textContent = info.description || 'No description available.';
+                
+                // Major price events
+                const eventsList = document.getElementById('info-events');
+                eventsList.innerHTML = '';
+                if (info.majorPriceEvents && info.majorPriceEvents.length > 0) {
+                    info.majorPriceEvents.forEach(event => {
+                        const li = document.createElement('li');
+                        li.textContent = event;
+                        eventsList.appendChild(li);
+                    });
+                } else {
+                    eventsList.innerHTML = '<li>No major events recorded</li>';
+                }
+                
+                // Energy & Mining
+                document.getElementById('info-energy').textContent = info.miningEnergyCost || 'N/A';
+                document.getElementById('info-mining-cost').textContent = info.miningCostPerCoin || 'N/A';
+                document.getElementById('info-mining').textContent = info.miningMethod || 'N/A';
+                
+                // Transaction mechanism
+                document.getElementById('info-transactions').textContent = info.transactionMethod || 'No information available.';
+                
+                // Risk assessment with color coding
+                const riskStyle = getRiskLevelStyle(info.riskLevel || 'Medium');
+                const riskBlock = document.querySelector('.info-block.risk-block');
+                
+                if (riskBlock) {
+                    riskBlock.innerHTML = `
+                        <h3>⚠️ Risk Assessment</h3>
+                        <div class="risk-level-container">
+                            <span class="risk-label">Risk Level:</span>
+                            <span class="risk-badge" style="background-color: ${riskStyle.bg}; color: ${riskStyle.color}; padding: 6px 14px; border-radius: 6px; font-weight: 600;">
+                                ${riskStyle.label}
+                            </span>
+                        </div>
+                        <p style="margin-top: 12px;">${info.riskExplanation || 'Risk assessment not available.'}</p>
+                    `;
+                }
+                
+            } else {
+                // Hide info section if no data available
+                infoSection.style.display = 'none';
+            }
         }
         
         // Initialize chart with 24h period
@@ -913,6 +1000,9 @@ document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     setupSearch();
     setupSort();
+    
+    // Load coin info data
+    loadCoinInfo();
     
     // Load initial data
     loadInitialData();
