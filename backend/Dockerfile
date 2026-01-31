@@ -17,9 +17,9 @@ RUN apt-get update && apt-get install -y \
 # Create app directory
 WORKDIR /app
 
-# Download Crow header-only library (use direct download instead of git clone)
+# Download Crow header-only library from a specific release
 RUN mkdir -p /app/include && \
-    wget https://raw.githubusercontent.com/CrowCpp/Crow/master/include/crow_all.h -O /app/include/crow.h
+    wget https://github.com/CrowCpp/Crow/releases/download/v1.0%2B5/crow_all.h -O /app/include/crow.h
 
 # Copy source files
 COPY crypto_server.cpp .
