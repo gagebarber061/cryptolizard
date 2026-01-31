@@ -7,9 +7,6 @@ services:
     dockerContext: ./backend
     plan: free
     healthCheckPath: /health
-    envVars:
-      - key: PORT
-        generateValue: false
 
   # Frontend Static Site
   - type: web
