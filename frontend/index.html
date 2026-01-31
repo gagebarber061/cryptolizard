@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoLizard - Live Cryptocurrency Prices</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+</head>
+<body>
+    <!-- Sticky Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="lizardcolor.png" alt="Logo" class="logo-icon">
+                <span class="site-name">CryptoLizard</span>
+            </div>
+            
+            <div class="nav-tabs">
+                <button class="tab-btn active" data-tab="market">Market Overview</button>
+                <button class="tab-btn" data-tab="crypto">All Coins</button>
+                <button class="tab-btn" data-tab="trending">Trending</button>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="Search cryptocurrencies..." id="search-input">
+                <span class="search-icon">🔍</span>
+                <div class="search-dropdown" id="search-dropdown">
+                    <!-- Search results will appear here -->
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+        <!-- Market Overview Tab -->
+        <div class="tab-content active" id="market-tab">
+            <div class="market-stats">
+                <div class="stat-card">
+                    <h3>Total Market Cap</h3>
+                    <p class="stat-value">$2.1T</p>
+                    <span class="stat-change positive">+2.4%</span>
+                </div>
+                <div class="stat-card">
+                    <h3>24h Volume</h3>
+                    <p class="stat-value">$89.2B</p>
+                    <span class="stat-change positive">+5.1%</span>
+                </div>
+                <div class="stat-card">
+                    <h3>BTC Dominance</h3>
+                    <p class="stat-value">51.3%</p>
+                    <span class="stat-change negative">-0.2%</span>
+                </div>
+                <div class="stat-card">
+                    <h3>Active Cryptocurrencies</h3>
+                    <p class="stat-value">12,847</p>
+                </div>
+            </div>
+
+            <div class="movers-section">
+                <div class="movers-container">
+                    <div class="movers-card gainers">
+                        <h3 class="movers-title">🚀 Top Gainers (24h)</h3>
+                        <div class="movers-list" id="top-gainers">
+                            <!-- Top gainers will be inserted here -->
+                        </div>
+                    </div>
+                    <div class="movers-card losers">
+                        <h3 class="movers-title">📉 Top Losers (24h)</h3>
+                        <div class="movers-list" id="top-losers">
+                            <!-- Top losers will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-title">Top 20 Cryptocurrencies</h2>
+            <div class="coin-list-container">
+                <div class="coin-list-header">
+                    <div class="header-rank">#</div>
+                    <div class="header-name">Name</div>
+                    <div class="header-price">Price</div>
+                    <div class="header-change">24h %</div>
+                    <div class="header-marketcap">Market Cap</div>
+                    <div class="header-volume">24h Volume</div>
+                    <div class="header-chart">Last 7 Days</div>
+                </div>
+                <div class="coin-list" id="coin-list">
+                    <!-- Coins will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Cryptocurrencies Tab -->
+        <div class="tab-content" id="crypto-tab">
+            <div class="crypto-header">
+                <h2 class="section-title">All Cryptocurrencies</h2>
+                <div class="sort-controls">
+                    <label for="sort-select">Sort by:</label>
+                    <div class="custom-dropdown" id="custom-dropdown">
+                        <div class="dropdown-selected" id="dropdown-selected">
+                            Rank
+                        </div>
+                        <div class="dropdown-options" id="dropdown-options">
+                            <div class="dropdown-option active" data-value="rank">Rank</div>
+                            <div class="dropdown-option" data-value="price-high">Price: High to Low</div>
+                            <div class="dropdown-option" data-value="price-low">Price: Low to High</div>
+                            <div class="dropdown-option" data-value="change-high">24h %: High to Low</div>
+                            <div class="dropdown-option" data-value="change-low">24h %: Low to High</div>
+                            <div class="dropdown-option" data-value="volume-high">Volume: High to Low</div>
+                            <div class="dropdown-option" data-value="volume-low">Volume: Low to High</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="coin-list-container">
+                <div class="coin-list-header">
+                    <div class="header-rank">#</div>
+                    <div class="header-name">Name</div>
+                    <div class="header-price">Price</div>
+                    <div class="header-change">24h %</div>
+                    <div class="header-marketcap">Market Cap</div>
+                    <div class="header-volume">24h Volume</div>
+                    <div class="header-chart">Last 7 Days</div>
+                </div>
+                <div class="coin-list" id="all-coins-list">
+                    <!-- All coins list -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Trending Tab -->
+        <div class="tab-content" id="trending-tab">
+            <h2 class="section-title">🔥 Trending Today</h2>
+            
+            <div class="trending-categories">
+                <h3 class="categories-title">📊 Top Trending Categories</h3>
+                <div class="categories-grid" id="trending-categories">
+                    <!-- Trending categories will be inserted here -->
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">Trending Coins</h3>
+            <div class="coin-list-container">
+                <div class="coin-list-header">
+                    <div class="header-rank">#</div>
+                    <div class="header-name">Name</div>
+                    <div class="header-price">Price</div>
+                    <div class="header-change">24h %</div>
+                    <div class="header-marketcap">Market Cap</div>
+                    <div class="header-volume">24h Volume</div>
+                    <div class="header-chart">Last 7 Days</div>
+                </div>
+                <div class="coin-list" id="trending-list">
+                    <!-- Trending coins -->
+                </div>
+            </div>
+    </main>
+
+    <!-- Coin Detail Page (Hidden by default) -->
+    <div class="detail-page" id="detail-page" style="display: none;">
+        <div class="detail-content">
+            <div class="detail-header">
+                <button class="back-btn" id="back-btn">← Back to List</button>
+                <div class="coin-title">
+                    <img src="" alt="" class="detail-logo" id="detail-logo">
+                    <h1 id="detail-name">Bitcoin</h1>
+                    <span class="detail-symbol" id="detail-symbol">BTC</span>
+                    <span class="detail-rank" id="detail-rank">#1</span>
+                </div>
+            </div>
+
+        <div class="detail-price-section">
+            <h2 class="current-price" id="detail-price">$0</h2>
+            <span class="price-change" id="detail-change">0%</span>
+        </div>
+
+        <div class="chart-controls">
+            <button class="chart-btn active" data-period="24h">24H</button>
+            <button class="chart-btn" data-period="7d">7D</button>
+            <button class="chart-btn" data-period="2w">2W</button>
+            <button class="chart-btn" data-period="1m">1M</button>
+            <button class="chart-btn" data-period="3m">3M</button>
+            <button class="chart-btn" data-period="6m">6M</button>
+            <button class="chart-btn" data-period="1y">1Y</button>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="price-chart"></canvas>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="stat-label">Market Cap</span>
+                <span class="stat-value" id="stat-mcap">$0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">24h Volume</span>
+                <span class="stat-value" id="stat-volume">$0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Circulating Supply</span>
+                <span class="stat-value" id="stat-supply">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Total Supply</span>
+                <span class="stat-value" id="stat-total-supply">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Max Supply</span>
+                <span class="stat-value" id="stat-max-supply">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">All-Time High</span>
+                <span class="stat-value" id="stat-ath">$0</span>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>About <span id="info-coin-name">Bitcoin</span></h2>
+            
+            <div class="info-block">
+                <h3>📅 Creation</h3>
+                <p><strong>Creator:</strong> <span id="info-creator">Satoshi Nakamoto</span></p>
+                <p><strong>Launch Date:</strong> <span id="info-date">January 3, 2009</span></p>
+            </div>
+
+            <div class="info-block">
+                <h3>📖 Description</h3>
+                <p id="info-description">
+                    Bitcoin is the first decentralized cryptocurrency, created in 2009 by an unknown person or group using the name Satoshi Nakamoto.
+                </p>
+            </div>
+
+            <div class="info-block">
+                <h3>📈 Major Price Events</h3>
+                <ul id="info-events">
+                    <li>2017 Bull Run: Reached nearly $20,000</li>
+                    <li>2018 Crash: Dropped to ~$3,200</li>
+                    <li>2021 ATH: Surpassed $69,000 in November</li>
+                </ul>
+            </div>
+
+            <div class="info-block">
+                <h3>⚡ Energy & Mining</h3>
+                <p><strong>Energy Usage:</strong> <span id="info-energy">~150 TWh annually</span></p>
+                <p><strong>Mining Cost:</strong> <span id="info-mining-cost">$15,000 - $25,000 per BTC</span></p>
+                <p><strong>How Mining Works:</strong> <span id="info-mining">Proof-of-Work (SHA-256)</span></p>
+            </div>
+
+            <div class="info-block">
+                <h3>🔄 Transaction Mechanism</h3>
+                <p id="info-transactions">
+                    Bitcoin transactions are verified by network nodes through cryptography and recorded in a public distributed ledger called a blockchain.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-attribution">
+                <span class="attribution-text">Price data provided by</span>
+                <a href="https://www.coingecko.com/en/api" target="_blank" rel="noopener noreferrer">
+                    <img src="coingecko-attribution.png" alt="CoinGecko API" class="coingecko-logo">
+                </a>
+            </div>
+            <div class="footer-info">
+                <p>&copy; 2026 CryptoLizard. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p class="loading-text">Loading cryptocurrency data...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

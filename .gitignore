@@ -1,0 +1,26 @@
+# Build directories
+backend/build/
+backend/Crow/
+backend/include/
+
+# Compiled files
+*.o
+*.out
+*.exe
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local

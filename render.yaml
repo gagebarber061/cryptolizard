@@ -1,0 +1,24 @@
+services:
+  # Backend C++ API Server
+  - type: web
+    name: cryptolizard-api
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        generateValue: false
+
+  # Frontend Static Site
+  - type: web
+    name: cryptolizard-frontend
+    env: static
+    buildCommand: echo "Static site ready"
+    staticPublishPath: ./frontend
+    plan: free
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
