@@ -1070,4 +1070,70 @@ body {
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
+
+    /* Risk Assessment Styling */
+.risk-block {
+    border-left: 4px solid #f59e0b;
+    background: linear-gradient(to right, #fef3c7 0%, transparent 100%);
+}
+
+.risk-level-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 12px 0;
+}
+
+.risk-label {
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 0.95em;
+}
+
+.risk-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.9em;
+    transition: transform 0.2s;
+}
+
+.risk-badge:hover {
+    transform: scale(1.05);
+}
+
+/* Info block improvements */
+.info-block h3 {
+    color: var(--text-primary);
+    margin-bottom: 12px;
+    font-size: 1.1em;
+}
+
+.info-block p {
+    line-height: 1.7;
+    color: var(--text-secondary);
+}
+
+.info-block ul {
+    list-style: none;
+    padding: 0;
+}
+
+.info-block ul li {
+    padding: 8px 0;
+    padding-left: 24px;
+    position: relative;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+.info-block ul li::before {
+    content: '•';
+    position: absolute;
+    left: 8px;
+    color: var(--accent-green);
+    font-weight: bold;
+    font-size: 1.2em;
+}
 }
